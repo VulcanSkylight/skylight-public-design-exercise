@@ -1,0 +1,518 @@
+/* ---------------------------------------------------------------
+   Skylight's design tokens. Most are unused by this page -- they
+   are the palette to design from.
+   --------------------------------------------------------------- */
+
+:root {
+  --black: #10171a;
+  --dark-gray: #596670;
+  --dark-gray-hover: #41505c;
+  --dark-gray-active: #384651;
+  --dark-gray-inactive: #646b70;
+  --medium-gray: hsl(208, 8%, 61%);
+  --light-gray: #e4e7eb;
+  --very-light-gray: #f5f6f8;
+  --purple: #262580;
+  --light-teal: #8eeffc;
+  --medium-teal: #227e97;
+  --dark-teal: #1d98a8;
+  --dark-teal-hover: #1a5c5c;
+  --teal: #3ab5c5;
+
+  --text-primary: #232c33;
+  --text-secondary: #384651;
+  --text-tertiary: #596670;
+
+  --skylight-blue: var(--medium-teal);
+  --skylight-blue-hover: #056f88;
+  --skylight-blue-active: #006179;
+  --skylight-blue-inactive: #447180;
+  --skylight-blue-faded: rgb(from var(--skylight-blue) r g b / 0.55);
+
+  --light-skylight-blue: #eff6f8;
+  --light-skylight-blue-hover: #e1eef1;
+  --light-skylight-blue-active: #d4e6eb;
+  --light-skylight-blue-inactive: #e7eced;
+
+  --skylight-select: var(--off-white);
+  --skylight-select-hover: #e7ebef;
+  --skylight-select-active: #dce2e7;
+  --skylight-select-inactive: #eaecee;
+
+  --dark-skylight-blue: #175869;
+
+  --white: #ffffff;
+  --red: #f81336;
+  --low-gray: #9f9f9f;
+  --lightblue: #94daf0;
+  --hover-action: #d3e9ee;
+  --border-gray: #dee0e0;
+  --gray: #555b5d;
+  --off-white: #f3f5f7;
+  --button-hover: #4aadb9;
+  --splash-screen-background: #eff7f8;
+
+  /* Bare r, g, b triples -- the only form that works inside rgba(). */
+  --dark-gray-rgb: 89, 102, 112;
+  --medium-gray-rgb: 149, 157, 164;
+  --light-gray-rgb: 228, 231, 235;
+  --dark-teal-rgb: 29, 152, 168;
+  --teal-rgb: 58, 181, 197;
+  --light-teal-rgb: 142, 239, 252;
+  --black-rgb: 16, 23, 26;
+
+  --heading-font: "Roboto Slab";
+  --body-font: Roboto, sans-serif;
+
+  /* Spacing is a scale, not free numbers. 8px is MUI's sx={{ m: 1 }}. */
+  --mui-base-spacing: 8px;
+  --spacing-xs: calc(var(--mui-base-spacing) * 0.25);
+  --spacing-s: calc(var(--mui-base-spacing) * 0.5);
+  --spacing-m: var(--mui-base-spacing);
+  --spacing-l: calc(var(--mui-base-spacing) * 2);
+  --spacing-xl: calc(var(--mui-base-spacing) * 3);
+  --spacing-2xl: calc(var(--mui-base-spacing) * 4);
+  --spacing-3xl: calc(var(--mui-base-spacing) * 5);
+  --spacing-4xl: calc(var(--mui-base-spacing) * 6);
+  --spacing-5xl: calc(var(--mui-base-spacing) * 7);
+  --spacing-6xl: calc(var(--mui-base-spacing) * 8);
+
+  /* Durations and easings match MUI's theme.transitions defaults, so a CSS
+     transition and a MUI one on the same interaction finish together. */
+  --duration-shortest: 150ms;
+  --duration-shorter: 200ms;
+  --duration-short: 250ms;
+  --duration-standard: 300ms;
+  --duration-complex: 375ms;
+  --duration-entering: 225ms;
+  --duration-leaving: 195ms;
+  --duration-drawer: 150ms;
+
+  --easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --easing-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+
+  --fade-in-transition: opacity 180ms linear;
+
+  /* MUI's own defaults, which this page inherits rather than chooses.
+     Not Skylight tokens -- changing one means overriding MUI. */
+  --mui-text-primary: rgba(0, 0, 0, 0.87);
+  --mui-input-border: rgba(0, 0, 0, 0.23);
+  --mui-error-main: #d32f2f;
+  --mui-error-text: #5f2120;
+  --mui-button-disabled: #c8c8c8bf;
+
+  /* This page */
+  --panel-width: 575px;
+  --panel-height: 575px;
+  --panel-gap: 50px;
+  --panel-radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--body-font);
+  color: var(--mui-text-primary);
+}
+
+/* ============================================================
+   The modal
+   ============================================================ */
+
+/* The MUI Dialog backdrop: dims the whole app behind it. */
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  animation: splash-fade-in var(--duration-entering) var(--easing-standard);
+}
+
+@keyframes splash-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Any rule here that sets `display` would otherwise beat the browser's
+   `[hidden] { display: none }`, so say it explicitly. */
+[hidden] {
+  display: none !important;
+}
+
+/* The Dialog paper itself is transparent -- the two panels are what you see. */
+.splash-paper {
+  display: flex;
+  flex-direction: row;
+  gap: var(--panel-gap);
+  margin: auto;
+}
+
+.splash-panel {
+  width: var(--panel-width);
+  min-height: var(--panel-height);
+  padding: 25px;
+  border-radius: var(--panel-radius);
+  background: linear-gradient(var(--splash-screen-background), var(--white));
+}
+
+.splash-panel h1,
+.splash-panel h2 {
+  margin: 0 0 16px;
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1.167;
+  color: var(--dark-teal);
+}
+
+/* MUI Typography subtitle1 */
+.splash-panel p {
+  margin: 0 0 30px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: 0.15px;
+  color: var(--dark-skylight-blue);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  vertical-align: sub;
+}
+
+.icon-sm {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---------- left panel ---------- */
+
+.splash-links {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.splash-links a {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--skylight-blue);
+  text-decoration: underline;
+}
+
+.splash-links .splash-link-lead {
+  font-size: 20px;
+  text-decoration: none;
+}
+
+/* ---------- right panel ---------- */
+
+.splash-login-module {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* The gradient runs the other way on this side. */
+  background: linear-gradient(var(--white), var(--splash-screen-background));
+}
+
+.splash-login-heading {
+  text-align: center;
+}
+
+.splash-login {
+  border: 2px solid var(--dark-teal);
+  border-radius: 4px;
+  background: var(--white);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 16px 24px;
+}
+
+/* MUI TextField: 24px below the field, plus 12px below the input itself. */
+.login-field {
+  margin-bottom: 36px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 8.5px 14px;
+  height: 40px;
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--mui-text-primary);
+  background: transparent;
+  border: 1px solid var(--mui-input-border);
+  border-radius: 4px;
+  transition: border-color var(--duration-shorter) var(--easing-decelerate);
+}
+
+.login-form input::placeholder {
+  color: var(--mui-text-primary);
+  opacity: 0.42;
+}
+
+.login-form input:hover {
+  border-color: var(--mui-text-primary);
+}
+
+.login-form input:focus {
+  outline: none;
+  border: 2px solid var(--medium-teal);
+  /* box-sizing already holds the height; this stops the text shifting 1px. */
+  padding: 7.5px 13px;
+}
+
+.login-link {
+  align-self: flex-start;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--skylight-blue);
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* The line of copy at the top of the two reset views (MUI subtitle1). */
+.splash-login .login-intro {
+  margin: 0 0 24px;
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: 0.15px;
+  color: var(--dark-skylight-blue);
+}
+
+/* MUI TextField helperText, shown when the address does not look like one. */
+.splash-login .login-error {
+  margin: 3px 14px 0;
+  font-size: 12px;
+  line-height: 1.66;
+  letter-spacing: 0.4px;
+  color: var(--mui-error-text);
+}
+
+.login-form input.is-invalid {
+  border-color: var(--mui-error-main);
+}
+
+/* MUI Alert, severity error, standard variant. */
+.login-alert {
+  display: flex;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: 0.15px;
+  color: var(--mui-error-text);
+  background-color: transparent;
+}
+
+.login-alert-icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-right: 12px;
+  padding: 7px 0;
+  box-sizing: content-box;
+  fill: var(--mui-error-main);
+  opacity: 0.9;
+}
+
+/* The icon sits at the left edge; the message takes the rest and centres
+   its text, which is what opens up the gap between the two. */
+.login-alert span {
+  flex: 1;
+  padding: 8px 0;
+  text-align: center;
+}
+
+/* MUI Button, contained, size small */
+.login-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 4px 10px;
+  min-width: 64px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.75;
+  letter-spacing: 0.37px;
+  text-transform: uppercase;
+  color: var(--white);
+  background-color: var(--medium-teal);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0 3px 1px -2px,
+    rgba(0, 0, 0, 0.14) 0 2px 2px 0,
+    rgba(0, 0, 0, 0.12) 0 1px 5px 0;
+  transition:
+    background-color var(--duration-short) var(--easing-standard),
+    box-shadow var(--duration-short) var(--easing-standard),
+    border-color var(--duration-short) var(--easing-standard),
+    color var(--duration-short) var(--easing-standard);
+}
+
+.login-button:hover {
+  background-color: var(--skylight-blue-hover);
+}
+
+/* The theme keeps the elevation when disabled and only greys the fill. */
+.login-button:disabled {
+  background-color: var(--mui-button-disabled);
+  cursor: default;
+}
+
+.login-button.is-loading::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  margin-left: -2px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: login-spin 1.4s linear infinite;
+}
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.login-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--light-gray);
+}
+
+.login-footer a {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--skylight-blue);
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+.splash-continue-guest {
+  margin-top: 38px;
+  text-align: center;
+}
+
+.splash-continue-guest a {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 32px;
+  color: var(--skylight-blue);
+  text-decoration: none;
+}
+
+.splash-continue-guest a:hover {
+  text-decoration: underline;
+}
+
+.splash-privacy-notice {
+  font-size: 13px;
+  color: var(--mui-text-primary);
+}
+
+.splash-privacy-notice a {
+  font-weight: 400;
+  color: var(--skylight-blue);
+}
+
+/* ---------- accessibility ---------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- narrow screens ---------- */
+
+/* 575 + 50 + 575 + 32px padding either side = 1264, so 1300 is the first
+   round number with clearance. Media queries cannot read custom properties,
+   so this number has to be kept in step with --panel-width by hand. */
+@media (max-width: 1300px) {
+  .splash-paper {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .splash-panel {
+    width: 100%;
+    max-width: var(--panel-width);
+    padding: 20px;
+  }
+}
+
+@media (max-width: 440px) {
+  .splash-panel h1,
+  .splash-panel h2 {
+    font-size: 36px;
+  }
+
+  .splash-panel p {
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .splash-continue-guest {
+    margin: 20px 0;
+  }
+}
+
+/* ============================================================
+   The app behind the modal -- backdrop only, not the exercise.
+   ============================================================ */
+
+.app-behind {
+  position: fixed;
+  inset: 0;
+  /* The screenshot is undimmed; .splash-overlay supplies the scrim.
+     Stretched rather than `cover` so the chrome at the edges -- the header
+     and the time slider -- is never cropped out at an odd window size. */
+  background:
+    url("app-background.png") center / 100% 100% no-repeat,
+    #cfd8d6;
+}

@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome to Skylight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400&family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!--
+      ============================================================
+      The Skylight app, as a screenshot. The real sign-up modal sits
+      over the live map; this stands in for it. The modal's own scrim
+      does the dimming, so app-background.png is the undimmed shot.
+      Nothing here is part of the sign-up exercise.
+      ============================================================
+    -->
+    <div class="app-behind"></div>
+
+    <!--
+      ============================================================
+      The sign-up modal. This is the part to edit.
+      ============================================================
+    -->
+    <div class="splash-overlay">
+      <div class="splash-paper">
+        <!-- Left panel: what Skylight is, and the ways in -->
+        <section class="splash-panel splash-welcome">
+          <h1>Welcome to Skylight</h1>
+
+          <p>
+            Skylight helps reduce illegal, unreported, and unregulated (IUU)
+            fishing by providing AI-powered vessel detections and insights. Our
+            real-time data and user-friendly platform empower enforcement and
+            compliance globally.
+          </p>
+          <p>
+            Organizations working to address illegal, unreported, and
+            unregulated (IUU) fishing may request access to the full version of
+            Skylight at no cost.
+          </p>
+
+          <div class="splash-links">
+            <a class="splash-link-lead" href="#guest" data-action="guest">
+              Try out a limited version as a guest
+              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.skylight.global/contact-us"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Request a free account for the full version
+              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.skylight.global/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Learn more about Skylight
+              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+                />
+              </svg>
+            </a>
+          </div>
+        </section>
+
+        <!-- Right panel: the sign-in form -->
+        <section class="splash-panel splash-login-module">
+          <div>
+            <h2 class="splash-login-heading">Sign in to your account</h2>
+
+            <div class="splash-login">
+              <!-- View 1: sign in -->
+              <form class="login-form" data-view="login" novalidate>
+                <div class="login-field">
+                  <label class="visually-hidden" for="email">Email</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    autocomplete="username"
+                  />
+                </div>
+
+                <div class="login-field">
+                  <label class="visually-hidden" for="password">Password</label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    autocomplete="new-password"
+                  />
+                </div>
+
+                <a class="login-link" href="#forgot" data-action="forgot"
+                  >Forgot Password?</a
+                >
+
+                <button class="login-button" type="submit">Log In</button>
+
+                <div class="login-alert" role="alert" hidden>
+                  <svg
+                    class="login-alert-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <span>Username or password is invalid, please try again</span>
+                </div>
+              </form>
+
+              <!-- View 2: ask for the email to send a reset link to -->
+              <form class="login-form" data-view="forgot" hidden novalidate>
+                <p class="login-intro">
+                  We'll email you a link to reset your password.
+                </p>
+
+                <div class="login-field">
+                  <label class="visually-hidden" for="reset-email">Email</label>
+                  <input
+                    id="reset-email"
+                    name="reset-email"
+                    type="email"
+                    placeholder="Email"
+                    autocomplete="username"
+                    aria-describedby="reset-email-error"
+                  />
+                  <p class="login-error" id="reset-email-error" hidden>
+                    Sorry, that email address isn&rsquo;t recognized. Please
+                    enter the email used for your Skylight login.
+                  </p>
+                </div>
+
+                <a class="login-link" href="#login" data-action="back-to-login"
+                  >Back to login</a
+                >
+
+                <button class="login-button" type="submit">Send</button>
+              </form>
+
+              <!-- View 3: the link has been sent -->
+              <div class="login-form" data-view="forgot-sent" hidden>
+                <p class="login-intro">
+                  If an account exists for that email, we've sent a reset link.
+                </p>
+
+                <a class="login-link" href="#login" data-action="back-to-login"
+                  >Back to login</a
+                >
+              </div>
+
+              <div class="login-footer">
+                <a
+                  href="https://www.skylight.global/contact-us"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  New to Skylight? Request a free account
+                  <svg
+                    class="icon icon-sm"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="splash-continue-guest">
+              <a href="#guest" data-action="guest">
+                Or continue as a guest
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="splash-privacy-notice">
+            <a
+              href="https://www.skylight.global/eula"
+              target="_blank"
+              rel="noreferrer"
+              >Skylight EULA</a
+            >&nbsp; (updated March 16, 2022) and &nbsp;<a
+              href="https://www.skylight.global/privacy-policy"
+              target="_blank"
+              rel="noreferrer"
+              >Privacy Policy</a
+            >&nbsp;(updated March 1, 2024)
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const overlay = document.querySelector(".splash-overlay");
+      const views = document.querySelectorAll(".splash-login [data-view]");
+      const loginView = document.querySelector('[data-view="login"]');
+      const emailInput = document.querySelector("#email");
+      const passwordInput = document.querySelector("#password");
+      const resetInput = document.querySelector("#reset-email");
+      const loginAlert = document.querySelector(".login-alert");
+      const resetError = document.querySelector(".login-error");
+
+      const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const SUBMIT_DELAY_MS = 700;
+
+      // Show one of the three login views and move focus into it
+      const showView = (name) => {
+        views.forEach((view) => {
+          view.hidden = view.dataset.view !== name;
+        });
+        document
+          .querySelector(`[data-view="${name}"] input, [data-view="${name}"] a`)
+          .focus();
+      };
+
+      const setResetError = (shown) => {
+        resetError.hidden = !shown;
+        resetInput.classList.toggle("is-invalid", shown);
+        resetInput.setAttribute("aria-invalid", String(shown));
+      };
+
+      // Remove and re-append so a repeat attempt visibly re-fires and screen
+      // readers announce it again
+      const showLoginAlert = () => {
+        loginAlert.remove();
+        loginAlert.hidden = false;
+        loginView.append(loginAlert);
+      };
+
+      // Disable the button and spin it for a beat before the result
+      const whileSubmitting = (form, done) => {
+        const button = form.querySelector(".login-button");
+        button.disabled = true;
+        button.classList.add("is-loading");
+        window.setTimeout(() => {
+          button.disabled = false;
+          button.classList.remove("is-loading");
+          done();
+        }, SUBMIT_DELAY_MS);
+      };
+
+      // One delegated listener rather than one per control, so renaming or
+      // deleting a button cannot take the other handlers down with it.
+      overlay.addEventListener("click", (event) => {
+        const action = event.target.closest("[data-action]")?.dataset.action;
+        if (!action) {
+          return;
+        }
+        event.preventDefault();
+
+        if (action === "guest") {
+          // Leaves you on the map, as in the real app. Skylight remembers this
+          // in localStorage; this does not, so Escape or a reload brings it back.
+          overlay.hidden = true;
+        } else if (action === "forgot") {
+          loginAlert.hidden = true;
+          resetInput.value = emailInput.value; // carry over whatever was typed
+          setResetError(false);
+          showView("forgot");
+        } else if (action === "back-to-login") {
+          setResetError(false);
+          showView("login");
+        }
+      });
+
+      overlay.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = event.target;
+
+        if (form.dataset.view === "login") {
+          // Clear it first so a repeat attempt visibly cycles
+          loginAlert.hidden = true;
+          whileSubmitting(form, () => {
+            // There is no auth API to ask, so a well-formed address plus any
+            // password signs in; everything else gets the error.
+            if (EMAIL_PATTERN.test(emailInput.value) && passwordInput.value) {
+              overlay.hidden = true;
+            } else {
+              showLoginAlert();
+            }
+          });
+          return;
+        }
+
+        whileSubmitting(form, () => {
+          if (!EMAIL_PATTERN.test(resetInput.value)) {
+            setResetError(true);
+            resetInput.focus();
+            return;
+          }
+          setResetError(false);
+          showView("forgot-sent");
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && overlay.hidden) {
+          overlay.hidden = false;
+        }
+      });
+    </script>
+  </body>
+</html>
