@@ -204,7 +204,6 @@ body {
   color: var(--dark-teal);
 }
 
-/* MUI Typography subtitle1 */
 .splash-panel p {
   margin: 0 0 30px;
   font-size: 16px;
@@ -253,7 +252,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* The gradient runs the other way on this side. */
   background: linear-gradient(var(--white), var(--splash-screen-background));
 }
 
@@ -274,7 +272,6 @@ body {
   padding: 16px 24px;
 }
 
-/* MUI TextField: 24px below the field, plus 12px below the input itself. */
 .login-field {
   margin-bottom: 36px;
 }
@@ -304,7 +301,6 @@ body {
 .login-form input:focus {
   outline: none;
   border: 2px solid var(--medium-teal);
-  /* box-sizing already holds the height; this stops the text shifting 1px. */
   padding: 7.5px 13px;
 }
 
@@ -320,7 +316,6 @@ body {
   text-decoration: underline;
 }
 
-/* The line of copy at the top of the two reset views (MUI subtitle1). */
 .splash-login .login-intro {
   margin: 0 0 24px;
   font-size: 16px;
@@ -329,7 +324,6 @@ body {
   color: var(--dark-skylight-blue);
 }
 
-/* MUI TextField helperText, shown when the address does not look like one. */
 .splash-login .login-error {
   margin: 3px 14px 0;
   font-size: 12px;
@@ -342,7 +336,6 @@ body {
   border-color: var(--mui-error-main);
 }
 
-/* MUI Alert, severity error, standard variant. */
 .login-alert {
   display: flex;
   padding: 6px 16px;
@@ -365,15 +358,12 @@ body {
   opacity: 0.9;
 }
 
-/* The icon sits at the left edge; the message takes the rest and centres
-   its text, which is what opens up the gap between the two. */
 .login-alert span {
   flex: 1;
   padding: 8px 0;
   text-align: center;
 }
 
-/* MUI Button, contained, size small */
 .login-button {
   display: inline-flex;
   align-items: center;
@@ -407,7 +397,6 @@ body {
   background-color: var(--skylight-blue-hover);
 }
 
-/* The theme keeps the elevation when disabled and only greys the fill. */
 .login-button:disabled {
   background-color: var(--mui-button-disabled);
   cursor: default;
@@ -490,9 +479,6 @@ body {
 
 /* ---------- narrow screens ---------- */
 
-/* 575 + 50 + 575 + 32px padding either side = 1264, so 1300 is the first
-   round number with clearance. Media queries cannot read custom properties,
-   so this number has to be kept in step with --panel-width by hand. */
 @media (max-width: 1300px) {
   .splash-paper {
     flex-direction: column;
@@ -523,14 +509,6 @@ body {
   }
 }
 
-/* ============================================================
-   The app behind the modal -- backdrop only, not the exercise.
-
-   Values measured off the live app; class names are its own, from
-   MapVesselSearch, MapLeftDrawer, RailButton, MySkylight and
-   SkylightTimeslider. Only the map itself is an image.
-   ============================================================ */
-
 .maps {
   position: fixed;
   inset: 0;
@@ -538,8 +516,7 @@ body {
   color: var(--chrome-text);
 }
 
-/* The only part that is a picture. Cropping terrain is harmless, so
-   object-fit: cover is safe here -- it never distorts. */
+/* The background photo of the map */
 .map {
   position: absolute;
   inset: 0;
@@ -548,8 +525,6 @@ body {
   object-fit: cover;
 }
 
-/* Shared surface treatment: MUI Paper elevation 4, which every floating
-   piece of chrome in the revamp sits on. */
 .map-vessel-search,
 .map-left-drawer-content,
 .skylight-timeslider {
@@ -561,15 +536,12 @@ body {
     0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
 
-/* ---------- logo and vessel search (MapVesselSearch.scss) ---------- */
+/* ---------- logo and vessel search ---------- */
 
-/* The pill is the MUI InputBase: the logo and search icon are adornments
-   inside it, so the whole thing is one 336x40 white surface. */
 .map-vessel-search {
   position: fixed;
   top: var(--spacing-m);
   left: var(--spacing-m);
-  /* the open drawer's default width, so the pill lines up with the panel */
   width: calc(var(--spacing-m) * 42);
   height: var(--spacing-3xl);
   display: flex;
@@ -612,7 +584,6 @@ body {
   min-width: 0;
 }
 
-/* MUI's default adornment colour, not a Skylight token. */
 .search-icon {
   flex: none;
   width: 20px;
@@ -642,38 +613,22 @@ body {
   outline: none;
 }
 
-/* Clicks fall through to the pill, which explains that it is inert. */
 .map-vessel-search.guest input {
   pointer-events: none;
 }
 
-/* ---------- the left rail (MapLeftDrawer.scss, RailButton.scss) ---------- */
+/* ---------- the left rail ---------- */
 
-/* The frame is unpainted: it spans the gap between the search pill and the
-   time slider. Closed, the card shrink-wraps the rail and centres in it.
-   Open, the card stretches to fill the frame, whose bottom edge drops to the
-   page margin -- and the rail gains a padding-bottom of exactly the slider's
-   height, which holds the icons on the same centre line either way.
-
-   The card is anchored, not centred, while open: otherwise a tall panel
-   would grow in both directions and drag the rail up and down with it. */
 .map-left-drawer-paper {
   --drawer-top: calc(var(--spacing-m) * 7);
   --drawer-bottom: var(--time-slider-spacing);
 
   position: fixed;
   left: var(--spacing-m);
-  /* --centering-gap is the slack left once the measured rail is taken out of
-     the band; JS sets it. Closed, that makes the card exactly rail-height and
-     centred. Open, both edges run out to the full band -- and the rail picks
-     up a padding-bottom of exactly the slider's height, which holds the icons
-     on the same centre line throughout. The card is `stretch` in both states,
-     so its height model never changes in a single frame. */
   top: calc(var(--drawer-top) + var(--centering-gap, 0px));
   bottom: calc(var(--drawer-bottom) + var(--centering-gap, 0px));
   display: flex;
   align-items: stretch;
-  /* Lets the map take input around the rail. */
   pointer-events: none;
   transition:
     top var(--duration-drawer) var(--easing-standard),
@@ -704,8 +659,6 @@ body {
 .map-left-drawer-paper.open .map-left-drawer-content {
   width: calc(var(--spacing-3xl) + var(--spacing-m) * 42);
 }
-
-
 
 .map-left-drawer-rail {
   flex: 0 0 auto;
@@ -788,7 +741,6 @@ body {
   border-bottom: 1px solid var(--chrome-divider);
 }
 
-/* MUI Typography subtitle2 */
 .panel-title {
   flex: 1;
   min-width: 0;
@@ -830,7 +782,7 @@ body {
   font-size: 14px;
 }
 
-/* ---------- My Skylight (MySkylight.scss) ---------- */
+/* ---------- My Skylight account menu ---------- */
 
 .my-skylight-tab > div,
 .my-skylight-tab > span {
@@ -845,8 +797,6 @@ body {
   padding: 5px 0;
 }
 
-/* MUI Button, size small, fullWidth -- outlined by default, contained for
-   the primary. Both are far smaller than a default-size button. */
 .button-bar-button {
   display: flex;
   align-items: center;
@@ -916,7 +866,6 @@ body {
   text-decoration: underline;
 }
 
-/* The section toggles are the same treatment, but not links. */
 .my-skylight-tab [data-section] {
   display: block;
   padding: 5px 0;
@@ -943,7 +892,6 @@ body {
   border-top: 5px solid currentColor;
 }
 
-/* MUI OpenInNew, as the app renders beside every outbound link. */
 .external {
   width: 15px;
   height: 15px;
@@ -951,7 +899,6 @@ body {
   fill: currentColor;
   vertical-align: -2px;
 }
-
 
 [data-no-interaction] {
   cursor: pointer;
@@ -963,7 +910,6 @@ body {
   border-radius: var(--spacing-s);
 }
 
-/* Styled like MUI's Tooltip, which is what the real app uses. */
 .exercise-hint {
   position: fixed;
   z-index: var(--z-info-tooltip, 1100);
@@ -979,11 +925,8 @@ body {
   pointer-events: none;
 }
 
-/* ---------- time slider (SkylightTimeslider.scss) ---------- */
+/* ---------- time slider ---------- */
 
-/* Closed it runs the full width and
-   the rail simply overlaps it, as on prod; open it pulls in to clear the
-   panel, on the drawer's own timing so the two move together. */
 .skylight-map-bottom-bar {
   position: fixed;
   left: var(--spacing-m);
@@ -1015,7 +958,6 @@ body {
   display: flex;
 }
 
-/* 204px on prod, measured; the slider takes the rest. */
 .map-date-range {
   display: flex;
   align-items: center;
@@ -1055,7 +997,6 @@ body {
   border-radius: var(--spacing-s);
 }
 
-/* The selected window. Its ends carry the drag thumbs. */
 .range-slider__range {
   position: absolute;
   top: 0;
