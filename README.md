@@ -2,11 +2,13 @@
 
 This is a plain-HTML copy of the sign-up modal anonymous visitors see when they land on
 [Skylight](https://app.skylight.earth). The purpose is to use this as the starting point
-for design exercises.
+for design exercises. Everything around the map is real markup you can edit; the map itself is a
+screenshot and does not move, so view the website if you want to see live map interactions.
 
 ## Running it
 
-Open `index.html` in a browser. That is the whole setup.
+Sign it to Github and open your terminal. Run the command `git clone https://github.com/VulcanSkylight/skylight-public-design-exercise.git`
+Open the `index.html` file in a browser
 
 If you would rather serve it over HTTP:
 
@@ -20,16 +22,21 @@ Then visit http://localhost:8000.
 
 | File                 |                                                                 |
 | -------------------- | --------------------------------------------------------------- |
-| `index.html`         | the markup — a backdrop div, then the modal                     |
+| `index.html`         | the markup — the app, then the modal, then the script           |
 | `styles.css`         | all the styling, Skylight's palette as CSS variables at the top |
-| `app-background.png` | a screenshot of the app, used as the backdrop                   |
+| `map-background.png` | a screenshot of the map, the only part that is not real markup  |
+| `skylight-logo.svg`  | the logo                                                        |
 
 Both source files are commented into labelled sections. In `styles.css` those are the design
 tokens, then the modal, then the app behind it; `index.html` is the backdrop, then the modal, then
 the script. Only one part is the exercise:
 
-- **The modal** — the welcome panel and the sign-in form. This is what to edit.
-- **The app behind the modal** — a screenshot of Skylight, backdrop only; it exists so the modal sits in context.
+- **The modal** — the welcome panel and the sign-in form. This is what to focus on editing.
+- **The app behind the modal** — the UX's chrome, as real markup: the logo and search pill,
+  the revamp banner, the left rail, the legend and the time slider. The rail buttons select,
+  the My Skylight panel opens with the product's real support and about links, its Log In button
+  brings the modal back, and the legend collapses, otherwise things are marked that they are not
+  interactable when clicking.
 
 ## Design tokens
 

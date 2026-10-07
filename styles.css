@@ -61,6 +61,27 @@
   --light-teal-rgb: 142, 239, 252;
   --black-rgb: 16, 23, 26;
 
+  /* The app flips these as a set in vessel-history mode. */
+  --chrome-surface: var(--white);
+  --chrome-surface-hover: var(--skylight-select-active);
+  --chrome-contrast: var(--skylight-blue);
+  --chrome-contrast-inactive: var(--skylight-blue-faded);
+  --chrome-text: var(--black);
+  --chrome-text-muted: var(--dark-gray);
+  --chrome-divider: rgba(var(--medium-gray-rgb), 0.6);
+
+  --time-slider-height: var(--spacing-3xl);
+  --time-slider-spacing: calc(var(--time-slider-height) + var(--spacing-l));
+  --time-slider-chrome-text: var(--dark-skylight-blue);
+  --time-slider-thumb: var(--white);
+  --time-slider-range-background: var(--skylight-blue-faded);
+  --time-slider-range-fill: var(--skylight-blue);
+
+  /* The nav is 8 * 8 = 64px outside, 2px less inside for the shadow border. */
+  --z-info-tooltip: 1100;
+  --nav-height: calc(var(--mui-base-spacing) * 8);
+  --nav-height-inner: calc(var(--nav-height) - 2px);
+
   --heading-font: "Roboto Slab";
   --body-font: Roboto, sans-serif;
 
@@ -504,15 +525,587 @@ body {
 
 /* ============================================================
    The app behind the modal -- backdrop only, not the exercise.
+
+   Values measured off the live app; class names are its own, from
+   MapVesselSearch, MapLeftDrawer, RailButton, MySkylight and
+   SkylightTimeslider. Only the map itself is an image.
    ============================================================ */
 
-.app-behind {
+.maps {
   position: fixed;
   inset: 0;
-  /* The screenshot is undimmed; .splash-overlay supplies the scrim.
-     Stretched rather than `cover` so the chrome at the edges -- the header
-     and the time slider -- is never cropped out at an odd window size. */
-  background:
-    url("app-background.png") center / 100% 100% no-repeat,
-    #cfd8d6;
+  font-family: var(--body-font);
+  color: var(--chrome-text);
+}
+
+/* The only part that is a picture. Cropping terrain is harmless, so
+   object-fit: cover is safe here -- it never distorts. */
+.map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Shared surface treatment: MUI Paper elevation 4, which every floating
+   piece of chrome in the revamp sits on. */
+.map-vessel-search,
+.map-left-drawer-content,
+.skylight-timeslider {
+  background-color: var(--chrome-surface);
+  border-radius: var(--spacing-s);
+  box-shadow:
+    0 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0 4px 5px 0 rgba(0, 0, 0, 0.14),
+    0 1px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- logo and vessel search (MapVesselSearch.scss) ---------- */
+
+/* The pill is the MUI InputBase: the logo and search icon are adornments
+   inside it, so the whole thing is one 336x40 white surface. */
+.map-vessel-search {
+  position: fixed;
+  top: var(--spacing-m);
+  left: var(--spacing-m);
+  /* the open drawer's default width, so the pill lines up with the panel */
+  width: calc(var(--spacing-m) * 42);
+  height: var(--spacing-3xl);
+  display: flex;
+  align-items: center;
+  padding: 6px var(--spacing-m) 6px 6px;
+  box-sizing: border-box;
+  font-size: 16px;
+  letter-spacing: 0.15px;
+  line-height: 23px;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+/* The logo is one 266x36 asset -- wordmark and "By Ai2" together -- scaled
+   by height, with the hairline and padding added outside it (content-box). */
+.search-brand {
+  --logo-height: var(--spacing-xl);
+  flex: none;
+  display: flex;
+  align-items: center;
+  box-sizing: content-box;
+  width: calc(var(--logo-height) * 266 / 36);
+  margin: 0 var(--spacing-m);
+  padding-right: var(--spacing-m);
+  border-right: 1px solid var(--chrome-divider);
+  overflow: hidden;
+}
+
+.search-brand-logo {
+  flex: none;
+  display: block;
+  width: auto;
+  height: var(--logo-height);
+}
+
+.search-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+  min-width: 0;
+}
+
+/* MUI's default adornment colour, not a Skylight token. */
+.search-icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: rgba(0, 0, 0, 0.54);
+}
+
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 2.5px 4px 2.5px 0;
+  font-family: inherit;
+  font-size: 16px;
+  letter-spacing: 0.15px;
+  line-height: 23px;
+  color: rgba(0, 0, 0, 0.38);
+  background: none;
+  border: none;
+}
+
+.search-field input::placeholder {
+  color: rgba(0, 0, 0, 0.38);
+  opacity: 1;
+}
+
+.search-field input:focus {
+  outline: none;
+}
+
+/* Clicks fall through to the pill, which explains that it is inert. */
+.map-vessel-search.guest input {
+  pointer-events: none;
+}
+
+/* ---------- the left rail (MapLeftDrawer.scss, RailButton.scss) ---------- */
+
+/* The frame is unpainted: it spans the gap between the search pill and the
+   time slider. Closed, the card shrink-wraps the rail and centres in it.
+   Open, the card stretches to fill the frame, whose bottom edge drops to the
+   page margin -- and the rail gains a padding-bottom of exactly the slider's
+   height, which holds the icons on the same centre line either way.
+
+   The card is anchored, not centred, while open: otherwise a tall panel
+   would grow in both directions and drag the rail up and down with it. */
+.map-left-drawer-paper {
+  --drawer-top: calc(var(--spacing-m) * 7);
+  --drawer-bottom: var(--time-slider-spacing);
+
+  position: fixed;
+  left: var(--spacing-m);
+  /* --centering-gap is the slack left once the measured rail is taken out of
+     the band; JS sets it. Closed, that makes the card exactly rail-height and
+     centred. Open, both edges run out to the full band -- and the rail picks
+     up a padding-bottom of exactly the slider's height, which holds the icons
+     on the same centre line throughout. The card is `stretch` in both states,
+     so its height model never changes in a single frame. */
+  top: calc(var(--drawer-top) + var(--centering-gap, 0px));
+  bottom: calc(var(--drawer-bottom) + var(--centering-gap, 0px));
+  display: flex;
+  align-items: stretch;
+  /* Lets the map take input around the rail. */
+  pointer-events: none;
+  transition:
+    top var(--duration-drawer) var(--easing-standard),
+    bottom var(--duration-drawer) var(--easing-standard);
+}
+
+.map-left-drawer-paper.open {
+  top: var(--drawer-top);
+  bottom: var(--spacing-m);
+}
+
+.map-left-drawer-paper.open .map-left-drawer-rail {
+  padding-bottom: calc(var(--time-slider-height) + var(--spacing-m));
+}
+
+.map-left-drawer-content {
+  display: flex;
+  flex-direction: row;
+  width: var(--spacing-3xl);
+  max-height: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: auto;
+  transition: width var(--duration-drawer) var(--easing-standard);
+}
+
+.map-left-drawer-paper.open .map-left-drawer-content {
+  width: calc(var(--spacing-3xl) + var(--spacing-m) * 42);
+}
+
+
+
+.map-left-drawer-rail {
+  flex: 0 0 auto;
+  width: var(--spacing-3xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  transition:
+    padding-bottom var(--duration-drawer) var(--easing-standard),
+    background-color var(--vessel-mode-transition);
+}
+
+.rail-items {
+  flex: none;
+}
+
+.rail-item {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-m) 0;
+}
+
+.rail-divider {
+  width: var(--spacing-xl);
+  margin: var(--spacing-m);
+  border: none;
+  border-top: 1px solid var(--chrome-divider);
+  transition: border-color var(--vessel-mode-transition);
+}
+
+.rail-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-2xl);
+  height: var(--spacing-2xl);
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--chrome-contrast-inactive);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--spacing-s);
+  cursor: pointer;
+}
+
+.rail-button svg {
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
+  fill: currentColor;
+}
+
+.rail-button:hover {
+  border-color: currentColor;
+}
+
+.rail-button.selected,
+.rail-button.selected:hover {
+  color: var(--skylight-blue);
+  background-color: var(--white);
+  border-color: var(--chrome-contrast);
+}
+
+.map-left-drawer-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: calc(var(--spacing-m) * 42);
+  min-width: calc(var(--spacing-m) * 42);
+  background-color: var(--white);
+  border-left: 1px solid var(--chrome-divider);
+}
+
+.map-left-drawer-panel .panel-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-s);
+  margin: 0 var(--spacing-m);
+  padding: var(--spacing-s) 0;
+  border-bottom: 1px solid var(--chrome-divider);
+}
+
+/* MUI Typography subtitle2 */
+.panel-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 30.8px;
+  letter-spacing: 0.1px;
+  color: var(--skylight-blue);
+}
+
+.panel-action {
+  display: flex;
+  width: var(--spacing-2xl);
+  height: var(--spacing-2xl);
+  padding: var(--spacing-m);
+  margin-right: calc(0px - var(--spacing-s));
+  box-sizing: border-box;
+  color: var(--skylight-blue);
+  background: none;
+  border: none;
+  border-radius: var(--spacing-s);
+  cursor: pointer;
+}
+
+.panel-action svg {
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
+  fill: currentColor;
+}
+
+.panel-action:hover {
+  background-color: rgba(var(--black-rgb), 0.04);
+}
+
+.panel-body {
+  flex: 1;
+  padding: var(--spacing-m);
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+/* ---------- My Skylight (MySkylight.scss) ---------- */
+
+.my-skylight-tab > div,
+.my-skylight-tab > span {
+  display: block;
+  padding: 5px 0;
+}
+
+.my-skylight-tab .my-skylight-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+  padding: 5px 0;
+}
+
+/* MUI Button, size small, fullWidth -- outlined by default, contained for
+   the primary. Both are far smaller than a default-size button. */
+.button-bar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: calc(var(--spacing-xl) + var(--spacing-xs));
+  padding: var(--spacing-xs) var(--spacing-m);
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.37px;
+  text-decoration: none;
+  color: var(--skylight-blue);
+  background-color: transparent;
+  border: 1px solid rgb(from var(--skylight-blue) r g b / 0.55);
+  border-radius: var(--spacing-s);
+  cursor: pointer;
+  transition: background-color var(--duration-short) var(--easing-standard);
+}
+
+.button-bar-button:hover {
+  border-color: var(--skylight-blue);
+  background-color: rgb(from var(--skylight-blue) r g b / 0.04);
+}
+
+.button-bar-button.primary {
+  color: var(--white);
+  background-color: var(--skylight-blue);
+  border-color: var(--skylight-blue);
+}
+
+.button-bar-button.primary:hover {
+  background-color: var(--skylight-blue-hover);
+}
+
+.my-skylight-tab .support-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 10px;
+}
+
+.my-skylight-tab .support-wrap[hidden] {
+  display: none;
+}
+
+.myskylight-menu-item {
+  color: var(--black);
+  cursor: pointer;
+}
+
+.myskylight-menu-item {
+  font-size: 14px;
+}
+
+.myskylight-menu-item.link,
+.myskylight-menu-item .link {
+  font-weight: 700;
+  color: var(--dark-teal);
+}
+
+.my-skylight-tab a.myskylight-menu-item,
+.my-skylight-tab .myskylight-menu-item a {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* The section toggles are the same treatment, but not links. */
+.my-skylight-tab [data-section] {
+  display: block;
+  padding: 5px 0;
+}
+
+.myskylight-learn-more {
+  font-weight: bold;
+}
+
+/* Stand-in for the app's skyicon caret. */
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: var(--spacing-xs);
+  vertical-align: middle;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 5px solid currentColor;
+}
+
+[data-section].collapsed .caret {
+  border-bottom: none;
+  border-top: 5px solid currentColor;
+}
+
+/* MUI OpenInNew, as the app renders beside every outbound link. */
+.external {
+  width: 15px;
+  height: 15px;
+  margin-left: 2px;
+  fill: currentColor;
+  vertical-align: -2px;
+}
+
+
+[data-no-interaction] {
+  cursor: pointer;
+}
+
+.inert-flagged {
+  outline: 2px solid var(--skylight-blue);
+  outline-offset: 2px;
+  border-radius: var(--spacing-s);
+}
+
+/* Styled like MUI's Tooltip, which is what the real app uses. */
+.exercise-hint {
+  position: fixed;
+  z-index: var(--z-info-tooltip, 1100);
+  max-width: calc(var(--spacing-m) * 28);
+  padding: var(--spacing-s) var(--spacing-m);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--white);
+  background-color: rgba(97, 97, 97, 0.92);
+  border-radius: var(--spacing-s);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ---------- time slider (SkylightTimeslider.scss) ---------- */
+
+/* Closed it runs the full width and
+   the rail simply overlaps it, as on prod; open it pulls in to clear the
+   panel, on the drawer's own timing so the two move together. */
+.skylight-map-bottom-bar {
+  position: fixed;
+  left: var(--spacing-m);
+  right: var(--spacing-m);
+  bottom: var(--spacing-m);
+  display: flex;
+  gap: var(--spacing-s);
+  transition: left var(--duration-drawer) var(--easing-standard);
+}
+
+.skylight-map-bottom-bar.drawer-open {
+  left: calc(var(--spacing-3xl) + var(--spacing-m) * 42 + var(--spacing-m) * 2);
+}
+
+.skylight-timeslider {
+  --time-slider-bar-height: 8px;
+  --time-slider-thumb-width: 20px;
+  --time-slider-thumb-height: 12px;
+  --time-slider-thumb-width-half: calc(var(--time-slider-thumb-width) * 0.5);
+
+  flex: 1;
+  display: flex;
+  height: var(--time-slider-height);
+  color: var(--time-slider-chrome-text);
+  transition: background-color var(--vessel-mode-transition);
+}
+
+.time-slider-date-range {
+  display: flex;
+}
+
+/* 204px on prod, measured; the slider takes the rest. */
+.map-date-range {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+  width: calc(var(--spacing-m) * 25 + var(--spacing-s));
+  padding: 0 var(--spacing-m) 0 var(--spacing-l);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--time-slider-chrome-text);
+  background: none;
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.map-date-range svg {
+  width: var(--spacing-l);
+  height: var(--spacing-l);
+  fill: currentColor;
+}
+
+.custom-slider-wrap {
+  position: relative;
+  flex: 1;
+  height: var(--time-slider-height);
+  margin-left: var(--time-slider-thumb-width-half);
+  margin-right: var(--spacing-2xl);
+}
+
+.custom-range-slider {
+  position: absolute;
+  top: calc(50% - var(--time-slider-bar-height) / 2);
+  left: calc(0px - var(--time-slider-thumb-width-half));
+  right: calc(0px - var(--time-slider-thumb-width-half));
+  height: var(--time-slider-bar-height);
+  background-color: var(--time-slider-range-background);
+  border-radius: var(--spacing-s);
+}
+
+/* The selected window. Its ends carry the drag thumbs. */
+.range-slider__range {
+  position: absolute;
+  top: 0;
+  left: 16%;
+  width: 58%;
+  height: 100%;
+  background-color: var(--time-slider-range-fill);
+  border-radius: var(--spacing-s);
+  cursor: grab;
+}
+
+.range-slider__thumb {
+  position: absolute;
+  top: calc(50% - var(--time-slider-thumb-height) / 2);
+  width: var(--time-slider-thumb-width);
+  height: var(--time-slider-thumb-height);
+  margin-left: calc(0px - var(--time-slider-thumb-width-half));
+  background-color: var(--time-slider-thumb);
+  border-radius: var(--spacing-s);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: ew-resize;
+}
+
+.range-slider__thumb.start {
+  left: 16%;
+}
+
+.range-slider__thumb.end {
+  left: 74%;
+}
+
+.range-slider-marks {
+  position: absolute;
+  inset: 0;
+}
+
+.range-slider-mark {
+  position: absolute;
+  bottom: var(--spacing-xs);
+  font-size: 10px;
+  white-space: nowrap;
+  color: var(--chrome-text-muted);
+  user-select: none;
+}
+
+.range-slider-mark::after {
+  content: "";
+  position: absolute;
+  top: -11px;
+  width: 1px;
+  height: 9px;
+  background-color: var(--chrome-divider);
 }
