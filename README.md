@@ -7,7 +7,8 @@ screenshot and does not move, so view the website if you want to see live map in
 
 ## Running it
 
-Sign it to Github and open your terminal. Run the command `git clone https://github.com/VulcanSkylight/skylight-public-design-exercise.git`
+Sign into github and create a fork of the repository by clicking the Fork button in the top right. Once you have a fork, open your terminal and run the command to clone the repo to your workspace with `git clone <forked-url>`
+
 Open the `index.html` file in a browser
 
 If you would rather serve it over HTTP:
